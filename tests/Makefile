@@ -9,3 +9,12 @@ default:
 	./ExtensionsNegotiator
 	$(CXX) -std=c++17 -fsanitize=address HttpParser.cpp -o HttpParser
 	./HttpParser
+
+.PHONY: commands
+commands:
+	rm -f commands.log
+	echo $(CXX) -std=c++17 -fsanitize=address -c TopicTree.cpp >> commands.log
+	echo $(CXX) -std=c++17 -fsanitize=address -c HttpRouter.cpp >> commands.log
+	echo $(CXX) -std=c++17 -fsanitize=address -c BloomFilter.cpp >> commands.log
+	echo $(CXX) -std=c++17 -fsanitize=address -c ExtensionsNegotiator.cpp >> commands.log
+	echo $(CXX) -std=c++17 -fsanitize=address -c HttpParser.cpp >> commands.log

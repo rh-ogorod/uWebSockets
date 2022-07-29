@@ -78,6 +78,27 @@ all:
 	$(MAKE) examples
 	$(MAKE) -C fuzzing
 	$(MAKE) -C benchmarks
+
+commands.log:
+	rm -f commands.log
+	for f in src/*.h; do \
+		echo $(CXX) $(CXXFLAGS) -pthread -flto -c -o "$$f.gch" "$$f" >> commands.log; \
+	done
+	for f in $(EXAMPLE_FILES); do \
+		echo $(CXX) -flto $(CXXFLAGS) -c -o $$(basename "$$f" ".cpp").o "examples/$$f.cpp" >> commands.log; \
+	done
+	for f in $(THREADED_EXAMPLE_FILES); do \
+		echo $(CXX) -pthread -flto $(CXXFLAGS) -c -o $$(basename "$$f" ".cpp").o "examples/$$f.cpp" >> commands.log; \
+	done
+	echo $(CXX) -shared -fPIC -flto $(CXXFLAGS) -c -o App.o capi/App.cpp >> commands.log
+	echo $(CXX) -o example.o -c capi/example.c >> commands.log
+
+.PHONY: commands
+commands: commands.log
+
+.PHONY: clean
 clean:
+	rm -f commands.log fuzzing/commands.log \
+		benchmarks/commands.log tests/commands.log
 	rm -rf $(EXAMPLE_FILES) $(THREADED_EXAMPLE_FILES)
 	rm -rf fuzzing/*.o benchmarks/*.o
