@@ -5,3 +5,9 @@ default:
 	clang++ -flto -O3 -DLIBUS_USE_OPENSSL `ls *.o | grep -Ev "broadcast_test|scale_test"` -lssl -lcrypto -o load_test
 	clang++ -flto -O3 -DLIBUS_USE_OPENSSL `ls *.o | grep -Ev "broadcast_test|load_test"` -lssl -lcrypto -o scale_test
 
+.PHONY: commands
+commands:
+	rm -f commands.log
+	for f in broadcast_test.c load_test.c scale_test.c; do \
+		echo clang -flto -O3 -DLIBUS_USE_OPENSSL -I../uSockets/src -c "$$f" >> commands.log; \
+	done
